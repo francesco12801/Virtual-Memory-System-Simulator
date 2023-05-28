@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VIRTUAL_MEMORY_SIZE 16777216    // 16 MB
-#define PHYSICAL_MEMORY_SIZE 1048576    // 1 MB
-#define PAGE_SIZE 4096                   // 4 KB
-#define PAGE_TABLE_ENTRIES (VIRTUAL_MEMORY_SIZE / PAGE_SIZE)
-#define SWAP_FILE_SIZE VIRTUAL_MEMORY_SIZE
+#define VIRTUAL_MEMORY_SIZE (1<<24)   // 16 MB
+#define PHYSICAL_MEMORY_SIZE (1<<20)    // 1 MB
+#define PAGE_SIZE (1<<12)                  // 4 KB
+#define PAGE_TABLE_ENTRIES (VIRTUAL_MEMORY_SIZE / PAGE_SIZE) // Having 4096 pages of virtual mem
+#define SWAP_FILE_SIZE (1<<24)
 
 // Page table entry flags
 #define FLAG_VALID (1 << 0)
@@ -24,10 +24,10 @@ typedef struct {
 } MMU;
 
 // MMU function prototypes
-void MMU_init(MMU* mmu);
-void MMU_destroy(MMU* mmu);
-void MMU_writeByte(MMU* mmu, int pos, char c);
+void initializeMMU(MMU* mmu) ;
+void destroyMMU(MMU* mmu);
+void MMU_writeByte(MMU* mmu, int pos, char c) ;
 char MMU_readByte(MMU* mmu, int pos);
-void MMU_exception(MMU* mmu, int pos);
-void MMU_swapOutPage(MMU* mmu);
-int MMU_swapInPage(MMU* mmu, int page);
+void pageFaultExcepHandler(MMU* mmu, int pos);
+void swapOutPage(MMU* mmu);
+int swapInPage(MMU* mmu, int page) ;

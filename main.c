@@ -4,7 +4,7 @@
 
 int main() {
     MMU mmu;
-    MMU_init(&mmu);
+    initializeMMU(&mmu);
 
     // Access virtual memory
     for (int i = 0; i < VIRTUAL_MEMORY_SIZE; i++) {
@@ -18,6 +18,6 @@ int main() {
         printf("\n");
     }
 
-    MMU_destroy(&mmu);
+    destroyMMU(&mmu);
     return 0;
 }
