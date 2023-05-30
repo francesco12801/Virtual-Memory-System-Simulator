@@ -1,4 +1,4 @@
-#include "mmu.c"
+#include "mmu.h"
 
 // Testing memory  
 

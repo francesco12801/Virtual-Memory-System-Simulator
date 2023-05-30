@@ -26,6 +26,7 @@ void MMU_writeByte(MMU* mmu, int pos, char c) {
         pageFaultExcepHandler(mmu, pos);
 
     mmu->page_table[page] |= FLAG_WRITE_BIT;
+    mmu->page_table[page] |= FLAG_REFERENCE_BIT;
     mmu->physical_memory[page * PAGE_SIZE + offset] = c;
 }
 
@@ -61,7 +62,7 @@ void pageFaultExcepHandler(MMU* mmu, int pos) {
         int swapped_out_page = swapInPage(mmu, page);
         mmu->page_table[swapped_out_page] &= ~FLAG_VALID; // setting flag to zero
     }
-
+  
     mmu->page_table[page] |= FLAG_VALID; // setting flag to 1 
 }
 
@@ -82,7 +83,7 @@ void swapOutPage(MMU* mmu) {
 
         if (mmu->page_table[page] & FLAG_VALID) {
             // Need to see if reference bit is set on the same entry (need i to do this control?)
-            if (mmu->page_table[page] & FLAG_REFERENCE_BIT) {
+            if (mmu->page_table[page] & FLAG_REFERENCE_BIT){
                 mmu->page_table[page] &= ~FLAG_REFERENCE_BIT; // reset
             } else {
                 // Without ref bit we sent page on swap area in according to offset number 
@@ -101,10 +102,10 @@ void swapOutPage(MMU* mmu) {
     }
 }
 
-
+static int last_swapped_in_page = 0;
 int swapInPage(MMU* mmu, int page) {
     // ***for me*** calculate offset considering entries (i need to be sure that i am in this range)
-    int last_swapped_in_page = 0;
+
     int swap_offset = (last_swapped_in_page % PAGE_TABLE_ENTRIES) * PAGE_SIZE;
     int memory_offset = page >= 0 ? page * PAGE_SIZE : last_swapped_in_page * PAGE_SIZE;
 
