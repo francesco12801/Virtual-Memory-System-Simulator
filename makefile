@@ -2,8 +2,8 @@
 CC=gcc
 CCOPTS=	-Wall -std=gnu99 
 
-main.o:	main.c	mmu.h	
-	$(CC) $(CCOPTS)	-o	test 	main.c	mmu.c
+build: main.c mmu.c mmu.h physical_memory_mng.h physical_memory_mng.c
+	$(CC) $(CCOPTS)	-o test *.c
 
 clean:
-	rm -f main
+	rm -f test
